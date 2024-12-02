@@ -6,6 +6,8 @@ import (
 )
 
 func Lexer(s string) {
+	s += "\n~"
+
 	Tokens := make([]Token, 0, 100)
 
 	id := 0
@@ -19,6 +21,17 @@ func Lexer(s string) {
 
 	for _, v := range s {
 		if unicode.IsDigit(v) && !quoteEncountered {
+			if len(temp) > 0 && !numberEncountered {
+				id += 1
+				v, exists := getType(temp)
+
+				if exists {
+					token := createToken(id, v, temp, line, column)
+					Tokens = append(Tokens, token)
+					temp = ""
+				}
+			}
+
 			numberEncountered = true
 			temp += string(v)
 		} else if numberEncountered && v == '.' {
@@ -29,10 +42,21 @@ func Lexer(s string) {
 			decimalPoints += 1
 			temp += string(v)
 		} else if v == '"' {
+			if len(temp) > 0 && !quoteEncountered {
+				id += 1
+				v, exists := getType(temp)
+
+				if exists {
+					token := createToken(id, v, temp, line, column)
+					Tokens = append(Tokens, token)
+					temp = ""
+				}
+			}
 			if numberEncountered {
 				break
 			}
 			if quoteEncountered {
+				temp += string(v)
 				id += 1
 				token := createToken(id, LITERAL, temp, line, column)
 				Tokens = append(Tokens, token)
@@ -43,6 +67,14 @@ func Lexer(s string) {
 			quoteEncountered = true
 			temp += string(v)
 		} else if v != '\n' && v != ' ' {
+			if numberEncountered {
+				id += 1
+				token := createToken(id, LITERAL, temp, line, column)
+				Tokens = append(Tokens, token)
+				temp = ""
+				numberEncountered = false
+			}
+
 			temp += string(v)
 			column += 1
 		} else {
@@ -60,12 +92,14 @@ func Lexer(s string) {
 				temp = ""
 			}
 
-			if v == ';' && !quoteEncountered {
+			if v == '\n' && !quoteEncountered {
 				column = 0
 				line += 1
 			}
 		}
 	}
 
-	fmt.Print(Tokens)
+	for _, v := range Tokens {
+		fmt.Println(v)
+	}
 }
