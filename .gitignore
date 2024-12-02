@@ -1,4 +1,4 @@
 shake
-*.thy
+some.thy
 .vscode
 go.mod

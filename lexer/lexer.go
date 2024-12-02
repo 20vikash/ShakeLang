@@ -5,6 +5,21 @@ import (
 	"unicode"
 )
 
+func checkValidVariableName(s string) bool {
+	validSym := '_'
+	if unicode.IsDigit(rune(s[0])) {
+		return false
+	}
+
+	for _, v := range s {
+		if !unicode.IsLetter(v) && v != validSym {
+			return false
+		}
+	}
+
+	return true
+}
+
 func Lexer(s string) {
 	s += "\n~"
 
@@ -103,6 +118,17 @@ func Lexer(s string) {
 				token := createToken(id, v, temp, line, column)
 				Tokens = append(Tokens, token)
 				temp = ""
+			} else {
+				if len(temp) > 0 {
+					valid := checkValidVariableName(temp)
+
+					if valid {
+						id += 1
+						token := createToken(id, IDENTIFIER, temp, line, column)
+						Tokens = append(Tokens, token)
+						temp = ""
+					}
+				}
 			}
 
 			if v == '\n' && !quoteEncountered {
