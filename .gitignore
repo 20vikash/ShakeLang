@@ -1,0 +1,4 @@
+shake
+*.thy
+.vscode
+go.mod
