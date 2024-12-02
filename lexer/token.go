@@ -1,15 +1,15 @@
 package lexer
 
-type token struct {
+type Token struct {
 	id     int
-	type_  Types
+	type_  Type
 	lexeme string
 	line   int
 	column int
 }
 
-func (t token) CreateToken(id int, type_ Types, lexeme string, line int, column int) *token {
-	return &token{
+func createToken(id int, type_ Type, lexeme string, line int, column int) Token {
+	return Token{
 		id:     id,
 		type_:  type_,
 		lexeme: lexeme,
