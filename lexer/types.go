@@ -32,6 +32,8 @@ func getType(s string) (Type, bool) {
 		"%":         OPERATOR,
 		",":         PUNCTUATOR,
 		"{":         PUNCTUATOR,
+		"(":         PUNCTUATOR,
+		")":         PUNCTUATOR,
 		"}":         PUNCTUATOR,
 		"[":         PUNCTUATOR,
 		"]":         PUNCTUATOR,

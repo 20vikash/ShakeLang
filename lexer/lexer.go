@@ -73,6 +73,19 @@ func Lexer(s string) {
 				Tokens = append(Tokens, token)
 				temp = ""
 				numberEncountered = false
+			} else {
+				d, exists := getType(string(v))
+				if exists {
+					id += 1
+					if len(temp) > 0 {
+						token := createToken(id, d, temp, line, column)
+						Tokens = append(Tokens, token)
+					}
+					token := createToken(id, d, string(v), line, column)
+					Tokens = append(Tokens, token)
+					temp = ""
+					continue
+				}
 			}
 
 			temp += string(v)
