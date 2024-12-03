@@ -51,7 +51,7 @@ func Lexer(s string) {
 			temp += string(v)
 		} else if numberEncountered && v == '.' {
 			if decimalPoints == 1 {
-				break
+				decimalError()
 			}
 
 			decimalPoints += 1
@@ -68,7 +68,7 @@ func Lexer(s string) {
 				}
 			}
 			if numberEncountered {
-				break
+				invalidLiteral()
 			}
 			if quoteEncountered {
 				temp += string(v)
@@ -92,10 +92,24 @@ func Lexer(s string) {
 			} else {
 				d, exists := getType(string(v))
 				if exists {
+					if quoteEncountered {
+						quotesError()
+					}
 					id += 1
 					if len(temp) > 0 {
-						token := createToken(id, d, temp, line, column)
-						Tokens = append(Tokens, token)
+						r, exists := getType(temp)
+						if exists {
+							token := createToken(id, r, temp, line, column)
+							Tokens = append(Tokens, token)
+						} else {
+							valid := checkValidVariableName(temp)
+							if valid {
+								token := createToken(id, IDENTIFIER, temp, line, column)
+								Tokens = append(Tokens, token)
+							} else {
+								identifierError()
+							}
+						}
 					}
 					token := createToken(id, d, string(v), line, column)
 					Tokens = append(Tokens, token)
@@ -116,6 +130,9 @@ func Lexer(s string) {
 			v, exists := getType(temp)
 
 			if exists {
+				if quoteEncountered {
+					quotesError()
+				}
 				id += 1
 				token := createToken(id, v, temp, line, column)
 				Tokens = append(Tokens, token)
