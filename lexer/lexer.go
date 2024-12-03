@@ -12,7 +12,7 @@ func checkValidVariableName(s string) bool {
 	}
 
 	for _, v := range s {
-		if !unicode.IsLetter(v) && v != validSym {
+		if !unicode.IsLetter(v) && v != validSym && !unicode.IsDigit(v) {
 			return false
 		}
 	}
