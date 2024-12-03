@@ -87,6 +87,7 @@ func Lexer(s string) {
 				token := createToken(id, LITERAL, temp, line, column)
 				Tokens = append(Tokens, token)
 				temp = ""
+				decimalPoints = 0
 				numberEncountered = false
 			} else {
 				d, exists := getType(string(v))
@@ -99,6 +100,7 @@ func Lexer(s string) {
 					token := createToken(id, d, string(v), line, column)
 					Tokens = append(Tokens, token)
 					temp = ""
+					decimalPoints = 0
 					continue
 				}
 			}
