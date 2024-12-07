@@ -27,7 +27,7 @@ func Lexer(s string) {
 
 	id := 0
 	temp := ""
-	line := 0
+	line := 1
 	column := 0
 
 	quoteEncountered := false
@@ -149,11 +149,15 @@ func Lexer(s string) {
 					}
 				}
 			}
+		}
 
-			if v == '\n' && !quoteEncountered {
-				column = 0
-				line += 1
+		if v == '\n' {
+			if !quoteEncountered {
+				quotesError()
 			}
+
+			column = 0
+			line += 1
 		}
 	}
 
