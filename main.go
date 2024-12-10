@@ -1,9 +1,6 @@
 package main
 
-import (
-	"os"
-	"shake/shake/lexer"
-)
+import "shake/shake/parser"
 
 func main() {
 
@@ -19,9 +16,11 @@ func main() {
 	// 	os.Exit(1)
 	// }
 
-	d, err := os.ReadFile("some.thy")
+	// d, err := os.ReadFile("some.thy")
 
-	if err == nil {
-		lexer.Lexer(string(d))
-	}
+	// if err == nil {
+	// 	lexer.Lexer(string(d))
+	// }
+
+	parser.Postfix("(a+b/c*(d+e)-f)")
 }
