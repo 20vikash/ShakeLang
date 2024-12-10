@@ -1,0 +1,3 @@
+Program = Statement*
+Statement = Assignment | Expression | Proclaimation
+Assignment = IDENTIFIER giveth Expression
