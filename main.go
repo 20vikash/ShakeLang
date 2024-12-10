@@ -22,5 +22,5 @@ func main() {
 	// 	lexer.Lexer(string(d))
 	// }
 
-	parser.Postfix("(a+b/c*(d+e)-f)")
+	parser.GetBinaryExpression("(a+b/c*(d+e)-f)")
 }

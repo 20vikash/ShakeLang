@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"reflect"
 	"unicode"
 )
 
@@ -14,7 +15,7 @@ var priority = map[string]int{
 	"(": 0,
 }
 
-func Postfix(infix string) {
+func postfix(infix string) string {
 	stack := make([]string, 0)
 	postfix := ""
 
@@ -32,15 +33,15 @@ func Postfix(infix string) {
 
 				if temp == "(" {
 					break
+				} else {
+					postfix += temp
 				}
-
-				postfix += temp
 			}
 		} else {
 			if len(stack) == 0 || (priority[string(v)] > priority[stack[len(stack)-1]]) {
 				stack = append(stack, string(v))
 			} else {
-				for priority[string(v)] <= priority[stack[len(stack)-1]] {
+				for len(stack) > 0 && priority[string(v)] <= priority[stack[len(stack)-1]] {
 					temp := stack[len(stack)-1]
 					stack = stack[:len(stack)-1]
 					postfix += temp
@@ -57,5 +58,70 @@ func Postfix(infix string) {
 		}
 	}
 
-	fmt.Println(postfix)
+	return postfix
+}
+
+func GetBinaryExpression(infix string) {
+	postfix := postfix(infix)
+	stack := make([]any, 0)
+
+	for _, v := range postfix {
+		if unicode.IsDigit(v) || unicode.IsLetter(v) {
+			stack = append(stack, string(v))
+		} else {
+			rightValue := stack[len(stack)-1]
+			leftValue := stack[len(stack)-2]
+
+			rightType := fmt.Sprintf("%v", reflect.TypeOf(rightValue))
+			leftType := fmt.Sprintf("%v", reflect.TypeOf(leftValue))
+
+			if rightType == "string" && leftType == "string" {
+				bin := BinaryExpression{
+					_type:    "BinaryExpression",
+					left:     Literal{_type: "Literal", value: leftValue.(string)},
+					right:    Literal{_type: "Literal", value: rightValue.(string)},
+					operator: string(v),
+				}
+
+				stack = stack[:len(stack)-2]
+
+				stack = append(stack, bin)
+			} else if rightType == "parser.BinaryExpression" && leftType == "string" {
+				bin := BinaryExpression{
+					_type:    "BinaryExpression",
+					left:     Literal{_type: "Literal", value: leftValue.(string)},
+					right:    stack[len(stack)-1].(BinaryExpression),
+					operator: string(v),
+				}
+
+				stack = stack[:len(stack)-2]
+
+				stack = append(stack, bin)
+			} else if rightType == "string" && leftType == "parser.BinaryExpression" {
+				bin := BinaryExpression{
+					_type:    "BinaryExpression",
+					left:     stack[len(stack)-2].(BinaryExpression),
+					right:    Literal{_type: "Literal", value: rightValue.(string)},
+					operator: string(v),
+				}
+
+				stack = stack[:len(stack)-2]
+
+				stack = append(stack, bin)
+			} else {
+				bin := BinaryExpression{
+					_type:    "BinaryExpression",
+					left:     stack[len(stack)-2].(BinaryExpression),
+					right:    stack[len(stack)-1].(BinaryExpression),
+					operator: string(v),
+				}
+
+				stack = stack[:len(stack)-2]
+
+				stack = append(stack, bin)
+			}
+		}
+	}
+
+	fmt.Println(stack[0].(BinaryExpression).right)
 }
