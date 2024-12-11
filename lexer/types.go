@@ -8,6 +8,7 @@ const (
 	LITERAL
 	OPERATOR
 	PUNCTUATOR
+	EOL
 	nil
 )
 

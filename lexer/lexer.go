@@ -35,7 +35,12 @@ func Lexer(s string) {
 	decimalPoints := 0
 
 	for _, v := range s {
-		if unicode.IsDigit(v) && !quoteEncountered {
+		if quoteEncountered && v != '"' {
+			temp += string(v)
+			continue
+		}
+
+		if unicode.IsDigit(v) {
 			if len(temp) > 0 && !numberEncountered {
 				id += 1
 				v, exists := getType(temp)
