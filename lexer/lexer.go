@@ -21,7 +21,7 @@ func checkValidVariableName(s string) bool {
 }
 
 func Lexer(s string) {
-	s += "\n~"
+	s += "\n"
 
 	Tokens := make([]Token, 0, 100)
 
@@ -119,8 +119,18 @@ func Lexer(s string) {
 				}
 			}
 
+			d, exists := getType(temp)
+
+			if exists {
+				id++
+				token := createToken(id, d, temp, line, column)
+				Tokens = append(Tokens, token)
+				temp = ""
+			}
+
 			temp += string(v)
 			column += 1
+
 		} else {
 			if quoteEncountered {
 				temp += string(v)
@@ -152,9 +162,29 @@ func Lexer(s string) {
 		}
 
 		if v == '\n' {
-			if !quoteEncountered {
-				quotesError()
+			if len(temp) > 0 {
+				r, exists := getType(temp)
+				if exists {
+					id++
+					token := createToken(id, r, temp, line, column)
+					Tokens = append(Tokens, token)
+				} else {
+					valid := checkValidVariableName(temp)
+					if valid {
+						id++
+						token := createToken(id, IDENTIFIER, temp, line, column)
+						Tokens = append(Tokens, token)
+					} else {
+						id++
+						token := createToken(id, LITERAL, temp, line, column)
+						Tokens = append(Tokens, token)
+					}
+				}
 			}
+
+			id++
+			token := createToken(id, EOL, "EOL", line, column)
+			Tokens = append(Tokens, token)
 
 			column = 0
 			line += 1
