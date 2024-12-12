@@ -9,6 +9,10 @@ type Program struct {
 	body  []Node
 }
 
+func createProgramNode(body []Node) Program {
+	return Program{_type: "Program", body: body}
+}
+
 type Identifier struct {
 	_type string
 	name  string

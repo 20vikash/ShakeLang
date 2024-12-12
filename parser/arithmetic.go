@@ -71,7 +71,7 @@ func postfix(infix string) string {
 	return postfix
 }
 
-func BinaryExpressionTree(tokens []lexer.Token) {
+func binaryExpressionTree(tokens []lexer.Token) BinaryExpression {
 	infix := ""
 
 	for _, v := range tokens {
@@ -83,7 +83,9 @@ func BinaryExpressionTree(tokens []lexer.Token) {
 
 	postfix := postfix(infix)
 	binExpression := getBinaryExpression(postfix)
-	fmt.Println(binExpression.right)
+	// fmt.Println(binExpression.right)
+
+	return binExpression
 }
 
 func getNodeTypeString(value any) Node {
@@ -108,7 +110,7 @@ func getBinaryExpression(postfix string) BinaryExpression {
 			stack = append(stack, chunk)
 		} else {
 			if len(stack) < 2 {
-				break
+				break //TODO: Invalid arithmetic expression
 			}
 
 			rightValue := stack[len(stack)-1]
