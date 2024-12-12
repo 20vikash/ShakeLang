@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"reflect"
+	"shake/shake/lexer"
 	"unicode"
 )
 
@@ -18,15 +19,22 @@ var priority = map[string]int{
 func postfix(infix string) string {
 	stack := make([]string, 0)
 	postfix := ""
+	chunk := ""
 
 	for _, v := range infix {
-		if v == '(' {
-			stack = append(stack, string(v))
+		if v != ',' {
+			chunk += string(v)
 			continue
 		}
-		if unicode.IsDigit(v) || unicode.IsLetter(v) {
-			postfix += string(v)
-		} else if v == ')' {
+
+		if chunk == "(" {
+			stack = append(stack, string(chunk))
+			chunk = ""
+			continue
+		}
+		if unicode.IsDigit(rune(chunk[0])) || unicode.IsLetter(rune(chunk[0])) {
+			postfix += fmt.Sprintf("%v,", chunk)
+		} else if chunk == ")" {
 			for {
 				temp := stack[len(stack)-1]
 				stack = stack[:len(stack)-1]
@@ -34,22 +42,24 @@ func postfix(infix string) string {
 				if temp == "(" {
 					break
 				} else {
-					postfix += temp
+					postfix += fmt.Sprintf("%v,", temp)
 				}
 			}
 		} else {
-			if len(stack) == 0 || (priority[string(v)] > priority[stack[len(stack)-1]]) {
-				stack = append(stack, string(v))
+			if len(stack) == 0 || (priority[string(chunk)] > priority[stack[len(stack)-1]]) {
+				stack = append(stack, string(chunk))
 			} else {
-				for len(stack) > 0 && priority[string(v)] <= priority[stack[len(stack)-1]] {
+				for len(stack) > 0 && priority[string(chunk)] <= priority[stack[len(stack)-1]] {
 					temp := stack[len(stack)-1]
 					stack = stack[:len(stack)-1]
-					postfix += temp
+					postfix += fmt.Sprintf("%v,", temp)
 				}
 
-				stack = append(stack, string(v))
+				stack = append(stack, string(chunk))
 			}
 		}
+
+		chunk = ""
 	}
 
 	if len(stack) > 0 {
@@ -61,14 +71,46 @@ func postfix(infix string) string {
 	return postfix
 }
 
-func GetBinaryExpression(infix string) {
+func BinaryExpressionTree(tokens []lexer.Token) {
+	infix := ""
+
+	for _, v := range tokens {
+		if v.Lexeme == "EOL" {
+			break
+		}
+		infix += fmt.Sprintf("%v,", v.Lexeme)
+	}
+
 	postfix := postfix(infix)
+	binExpression := getBinaryExpression(postfix)
+	fmt.Println(binExpression.right)
+}
+
+func getNodeTypeString(value any) Node {
+	if unicode.IsLetter(rune(value.(string)[0])) || value.(string)[0] == '_' {
+		return createIdentifierNode(value.(string))
+	} else {
+		return createLiteralNode(value.(string))
+	}
+}
+
+func getBinaryExpression(postfix string) BinaryExpression {
 	stack := make([]any, 0)
+	chunk := ""
 
 	for _, v := range postfix {
-		if unicode.IsDigit(v) || unicode.IsLetter(v) {
-			stack = append(stack, string(v))
+		if v != ',' {
+			chunk += string(v)
+			continue
+		}
+
+		if unicode.IsDigit(rune(chunk[0])) || unicode.IsLetter(rune(chunk[0])) {
+			stack = append(stack, chunk)
 		} else {
+			if len(stack) < 2 {
+				break
+			}
+
 			rightValue := stack[len(stack)-1]
 			leftValue := stack[len(stack)-2]
 
@@ -78,8 +120,8 @@ func GetBinaryExpression(infix string) {
 			if rightType == "string" && leftType == "string" {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     Literal{_type: "Literal", value: leftValue.(string)},
-					right:    Literal{_type: "Literal", value: rightValue.(string)},
+					left:     getNodeTypeString(leftValue),
+					right:    getNodeTypeString(rightValue),
 					operator: string(v),
 				}
 
@@ -89,7 +131,7 @@ func GetBinaryExpression(infix string) {
 			} else if rightType == "parser.BinaryExpression" && leftType == "string" {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     Literal{_type: "Literal", value: leftValue.(string)},
+					left:     getNodeTypeString(leftValue),
 					right:    stack[len(stack)-1].(BinaryExpression),
 					operator: string(v),
 				}
@@ -101,7 +143,7 @@ func GetBinaryExpression(infix string) {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
 					left:     stack[len(stack)-2].(BinaryExpression),
-					right:    Literal{_type: "Literal", value: rightValue.(string)},
+					right:    getNodeTypeString(rightValue),
 					operator: string(v),
 				}
 
@@ -121,7 +163,9 @@ func GetBinaryExpression(infix string) {
 				stack = append(stack, bin)
 			}
 		}
+
+		chunk = ""
 	}
 
-	fmt.Println(stack[0].(BinaryExpression).right)
+	return stack[0].(BinaryExpression)
 }

@@ -14,6 +14,10 @@ type Identifier struct {
 	name  string
 }
 
+func createIdentifierNode(name string) Identifier {
+	return Identifier{_type: "Identifier", name: name}
+}
+
 type BinaryExpression struct {
 	_type    string
 	left     Node
@@ -21,20 +25,27 @@ type BinaryExpression struct {
 	right    Node
 }
 
-type VariableDeclaration struct {
-	_type       string
-	declaration VariableDeclarator
+func createBinaryExpressionNode(left Node, operator string, right Node) BinaryExpression {
+	return BinaryExpression{_type: "BinaryExpression", left: left, right: right, operator: operator}
 }
 
-type VariableDeclarator struct {
+type VariableDeclaration struct {
 	_type string
 	id    Identifier
-	init  Literal
+	init  Node
+}
+
+func createVariableDeclarationNode(id Identifier, init Node) VariableDeclaration {
+	return VariableDeclaration{_type: "VariableDeclaration", id: id, init: init}
 }
 
 type Literal struct {
 	_type string
 	value string
+}
+
+func createLiteralNode(value string) Literal {
+	return Literal{_type: "Literal", value: value}
 }
 
 type SubscriptExpression struct {
@@ -50,7 +61,5 @@ func (p Identifier) iHaveTo() {}
 func (p BinaryExpression) iHaveTo() {}
 
 func (p VariableDeclaration) iHaveTo() {}
-
-func (p VariableDeclarator) iHaveTo() {}
 
 func (p Literal) iHaveTo() {}
