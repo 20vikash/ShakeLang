@@ -124,7 +124,7 @@ func getBinaryExpression(postfix string) BinaryExpression {
 					_type:    "BinaryExpression",
 					left:     getNodeTypeString(leftValue),
 					right:    getNodeTypeString(rightValue),
-					operator: string(v),
+					operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -135,7 +135,7 @@ func getBinaryExpression(postfix string) BinaryExpression {
 					_type:    "BinaryExpression",
 					left:     getNodeTypeString(leftValue),
 					right:    stack[len(stack)-1].(BinaryExpression),
-					operator: string(v),
+					operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -146,7 +146,7 @@ func getBinaryExpression(postfix string) BinaryExpression {
 					_type:    "BinaryExpression",
 					left:     stack[len(stack)-2].(BinaryExpression),
 					right:    getNodeTypeString(rightValue),
-					operator: string(v),
+					operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -157,7 +157,7 @@ func getBinaryExpression(postfix string) BinaryExpression {
 					_type:    "BinaryExpression",
 					left:     stack[len(stack)-2].(BinaryExpression),
 					right:    stack[len(stack)-1].(BinaryExpression),
-					operator: string(v),
+					operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
