@@ -64,7 +64,7 @@ func postfix(infix string) string {
 
 	if len(stack) > 0 {
 		for i := len(stack) - 1; i >= 0; i-- {
-			postfix += stack[i]
+			postfix += fmt.Sprintf("%v,", stack[i])
 		}
 	}
 
