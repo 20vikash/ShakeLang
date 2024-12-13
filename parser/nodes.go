@@ -43,6 +43,10 @@ func createVariableDeclarationNode(id Identifier, init Node) VariableDeclaration
 	return VariableDeclaration{_type: "VariableDeclaration", id: id, init: init}
 }
 
+func createVariableDeclarationNodeWithoutInit(id Identifier) VariableDeclaration {
+	return VariableDeclaration{_type: "VariableDeclaration", id: id}
+}
+
 type Literal struct {
 	_type string
 	value string

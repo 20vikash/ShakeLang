@@ -13,7 +13,11 @@ func Ast(tokens []lexer.Token) {
 
 	for i := 0; i < len(tokens); i++ {
 		if tokens[i].Lexeme == "declare" {
-			if count == 0 && tokens[i+1].Type_ == lexer.IDENTIFIER && tokens[i+2].Lexeme == "giveth" && tokens[i+3].Type_ != lexer.EOL {
+			if count == 0 && tokens[i+1].Type_ == lexer.IDENTIFIER && tokens[i+2].Type_ == lexer.EOL {
+				idNode := createIdentifierNode(tokens[i+1].Lexeme)
+				declareNode := createVariableDeclarationNodeWithoutInit(idNode)
+				nodes = append(nodes, declareNode)
+			} else if count == 0 && tokens[i+1].Type_ == lexer.IDENTIFIER && tokens[i+2].Lexeme == "giveth" && tokens[i+3].Type_ != lexer.EOL {
 				id := createIdentifierNode(tokens[i+1].Lexeme)
 
 				if tokens[i+4].Type_ != lexer.EOL {
