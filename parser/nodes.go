@@ -29,10 +29,6 @@ type BinaryExpression struct {
 	right    Node
 }
 
-func createBinaryExpressionNode(left Node, operator string, right Node) BinaryExpression {
-	return BinaryExpression{_type: "BinaryExpression", left: left, right: right, operator: operator}
-}
-
 type VariableDeclaration struct {
 	_type string
 	id    Identifier
