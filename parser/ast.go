@@ -43,10 +43,42 @@ func Ast(tokens []lexer.Token) {
 			} else {
 				break //TODO: Invalid statement
 			}
+		}
 
-			if tokens[i].Lexeme != "EOL" {
-				continue
+		if tokens[i].Lexeme == "proclaim" {
+			if count == 0 && tokens[i+1].Type_ != lexer.EOL {
+				if tokens[i+2].Type_ != lexer.EOL {
+					num := i + 1
+
+					for tokens[num].Lexeme != "EOL" {
+						temp = append(temp, tokens[num])
+						num++
+					}
+
+					node := binaryExpressionTree(temp)
+					proclaimNode := createProclaimStatementNode(node)
+					nodes = append(nodes, proclaimNode)
+				} else {
+					if tokens[i+1].Type_ == lexer.LITERAL {
+						literalNode := createLiteralNode(tokens[i+1].Lexeme)
+						proclaimNode := createProclaimStatementNode(literalNode)
+						nodes = append(nodes, proclaimNode)
+					} else if tokens[i+1].Type_ == lexer.IDENTIFIER {
+						idNode := createIdentifierNode(tokens[i+1].Lexeme)
+						proclaimNode := createProclaimStatementNode(idNode)
+						nodes = append(nodes, proclaimNode)
+					} else {
+						break //TODO: Invalid arguement.
+					}
+				}
+			} else {
+				break //TODO: Invalid proclaim statement
 			}
+		}
+
+		if tokens[i].Lexeme != "EOL" {
+			count++
+			continue
 		}
 
 		temp = temp[:0]

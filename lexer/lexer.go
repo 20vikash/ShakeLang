@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"unicode"
 )
 
@@ -20,7 +19,31 @@ func checkValidVariableName(s string) bool {
 	return true
 }
 
-func Lexer(s string) {
+func addTemp(temp string, Tokens []Token, id int, line int, column int) ([]Token, int) {
+	if len(temp) > 0 {
+		r, exists := getType(temp)
+		if exists {
+			id++
+			token := createToken(id, r, temp, line, column)
+			Tokens = append(Tokens, token)
+		} else {
+			valid := checkValidVariableName(temp)
+			if valid {
+				id++
+				token := createToken(id, IDENTIFIER, temp, line, column)
+				Tokens = append(Tokens, token)
+			} else {
+				id++
+				token := createToken(id, LITERAL, temp, line, column)
+				Tokens = append(Tokens, token)
+			}
+		}
+	}
+
+	return Tokens, id
+}
+
+func Lexer(s string) []Token {
 	s += "\n"
 
 	Tokens := make([]Token, 0, 100)
@@ -52,7 +75,9 @@ func Lexer(s string) {
 				}
 			}
 
-			numberEncountered = true
+			if len(temp) > 0 && !unicode.IsLetter(rune(temp[0])) {
+				numberEncountered = true
+			}
 			temp += string(v)
 		} else if numberEncountered && v == '.' {
 			if decimalPoints == 1 {
@@ -101,21 +126,8 @@ func Lexer(s string) {
 						quotesError()
 					}
 					id += 1
-					if len(temp) > 0 {
-						r, exists := getType(temp)
-						if exists {
-							token := createToken(id, r, temp, line, column)
-							Tokens = append(Tokens, token)
-						} else {
-							valid := checkValidVariableName(temp)
-							if valid {
-								token := createToken(id, IDENTIFIER, temp, line, column)
-								Tokens = append(Tokens, token)
-							} else {
-								identifierError()
-							}
-						}
-					}
+					Tokens, id = addTemp(temp, Tokens, id, line, column)
+
 					token := createToken(id, d, string(v), line, column)
 					Tokens = append(Tokens, token)
 					temp = ""
@@ -167,25 +179,7 @@ func Lexer(s string) {
 		}
 
 		if v == '\n' {
-			if len(temp) > 0 {
-				r, exists := getType(temp)
-				if exists {
-					id++
-					token := createToken(id, r, temp, line, column)
-					Tokens = append(Tokens, token)
-				} else {
-					valid := checkValidVariableName(temp)
-					if valid {
-						id++
-						token := createToken(id, IDENTIFIER, temp, line, column)
-						Tokens = append(Tokens, token)
-					} else {
-						id++
-						token := createToken(id, LITERAL, temp, line, column)
-						Tokens = append(Tokens, token)
-					}
-				}
-			}
+			Tokens, id = addTemp(temp, Tokens, id, line, column)
 
 			id++
 			token := createToken(id, EOL, "EOL", line, column)
@@ -196,7 +190,9 @@ func Lexer(s string) {
 		}
 	}
 
-	for _, v := range Tokens {
-		fmt.Println(v)
-	}
+	// for _, v := range Tokens {
+	// 	fmt.Println(v)
+	// }
+
+	return Tokens
 }

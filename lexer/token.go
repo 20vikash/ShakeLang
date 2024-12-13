@@ -2,8 +2,8 @@ package lexer
 
 type Token struct {
 	id     int
-	type_  Type
-	lexeme string
+	Type_  Type
+	Lexeme string
 	line   int
 	column int
 }
@@ -11,8 +11,8 @@ type Token struct {
 func createToken(id int, type_ Type, lexeme string, line int, column int) Token {
 	return Token{
 		id:     id,
-		type_:  type_,
-		lexeme: lexeme,
+		Type_:  type_,
+		Lexeme: lexeme,
 		line:   line,
 		column: column,
 	}

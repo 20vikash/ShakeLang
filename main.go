@@ -1,6 +1,10 @@
 package main
 
-import "shake/shake/parser"
+import (
+	"os"
+	"shake/shake/lexer"
+	"shake/shake/parser"
+)
 
 func main() {
 
@@ -16,11 +20,10 @@ func main() {
 	// 	os.Exit(1)
 	// }
 
-	// d, err := os.ReadFile("some.thy")
+	d, err := os.ReadFile("some.thy")
 
-	// if err == nil {
-	// 	lexer.Lexer(string(d))
-	// }
-
-	parser.GetBinaryExpression("(a+b/c*(d+e)-f)")
+	if err == nil {
+		tokens := lexer.Lexer(string(d))
+		parser.Ast(tokens)
+	}
 }

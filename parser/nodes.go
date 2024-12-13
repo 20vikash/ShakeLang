@@ -52,10 +52,23 @@ func createLiteralNode(value string) Literal {
 	return Literal{_type: "Literal", value: value}
 }
 
-type SubscriptExpression struct {
-	_type     string
-	object    Identifier
-	subscript Node
+type InitializationExpression struct {
+	_type string
+	id    Identifier
+	init  Node
+}
+
+type proclaimStatement struct {
+	_type string
+	arg   Node
+}
+
+func createProclaimStatementNode(arg Node) proclaimStatement {
+	return proclaimStatement{_type: "ProclaimStatement", arg: arg}
+}
+
+func createInitializationExpressionNode(id Identifier, init Node) InitializationExpression {
+	return InitializationExpression{_type: "InitializationExpression", id: id, init: init}
 }
 
 func (p Program) iHaveTo() {}
@@ -63,6 +76,10 @@ func (p Program) iHaveTo() {}
 func (p Identifier) iHaveTo() {}
 
 func (p BinaryExpression) iHaveTo() {}
+
+func (p InitializationExpression) iHaveTo() {}
+
+func (p proclaimStatement) iHaveTo() {}
 
 func (p VariableDeclaration) iHaveTo() {}
 
