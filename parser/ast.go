@@ -17,6 +17,7 @@ func Ast(tokens []lexer.Token) {
 			temp = temp[:0]
 			count = 0
 			inStatement = false
+			continue
 		}
 
 		if tokens[i].Lexeme == "declare" && !inStatement {
@@ -49,17 +50,15 @@ func Ast(tokens []lexer.Token) {
 						declareNode := createVariableDeclarationNode(id, idNode)
 						nodes = append(nodes, declareNode)
 					} else {
-						break //TODO: Invalid init value
+						invalidInitValue()
 					}
 				}
 			} else {
-				break //TODO: Invalid statement
+				invalidDeclaration()
 			}
 
 			count++
-		}
-
-		if tokens[i].Lexeme == "proclaim" && !inStatement {
+		} else if tokens[i].Lexeme == "proclaim" && !inStatement {
 			inStatement = true
 
 			if count == 0 && tokens[i+1].Type_ != lexer.EOL {
@@ -84,17 +83,15 @@ func Ast(tokens []lexer.Token) {
 						proclaimNode := createProclaimStatementNode(idNode)
 						nodes = append(nodes, proclaimNode)
 					} else {
-						break //TODO: Invalid arguement.
+						invalidArgProclaim()
 					}
 				}
 			} else {
-				break //TODO: Invalid proclaim statement
+				invalidProclamation()
 			}
 
 			count++
-		}
-
-		if tokens[i].Type_ == lexer.IDENTIFIER && !inStatement {
+		} else if tokens[i].Type_ == lexer.IDENTIFIER && !inStatement {
 			inStatement = true
 
 			if count == 0 && tokens[i+1].Lexeme == "giveth" && tokens[i+2].Type_ != lexer.EOL {
@@ -121,14 +118,18 @@ func Ast(tokens []lexer.Token) {
 						initNode := createInitializationExpressionNode(id, literalNode)
 						nodes = append(nodes, initNode)
 					} else {
-						break //TODO: Invalid init value
+						invalidInitValue()
 					}
 				}
 			} else {
-				break //TODO: Invalid initialization statement.
+				invalidAssignment()
 			}
 
 			count++
+		} else {
+			if !inStatement {
+				invalidStatement()
+			}
 		}
 	}
 

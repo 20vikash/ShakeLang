@@ -34,8 +34,12 @@ func addTemp(temp string, Tokens []Token, id int, line int, column int) ([]Token
 				Tokens = append(Tokens, token)
 			} else {
 				id++
-				token := createToken(id, LITERAL, temp, line, column)
-				Tokens = append(Tokens, token)
+				if unicode.IsDigit(rune(temp[0])) {
+					token := createToken(id, LITERAL, temp, line, column)
+					Tokens = append(Tokens, token)
+				} else {
+					identifierError()
+				}
 			}
 		}
 	}
@@ -184,6 +188,7 @@ func Lexer(s string) []Token {
 			id++
 			token := createToken(id, EOL, "EOL", line, column)
 			Tokens = append(Tokens, token)
+			temp = ""
 
 			column = 0
 			line += 1
