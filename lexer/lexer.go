@@ -188,7 +188,11 @@ func Lexer(s string) []Token {
 			id++
 			token := createToken(id, EOL, "EOL", line, column)
 			Tokens = append(Tokens, token)
+
 			temp = ""
+			numberEncountered = false
+			quoteEncountered = false
+			decimalPoints = 0
 
 			column = 0
 			line += 1
