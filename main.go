@@ -2,8 +2,8 @@ package main
 
 import (
 	"os"
-	"shake/shake/lexer"
-	"shake/shake/parser"
+	"shake/shake/frontend/lexer"
+	"shake/shake/frontend/parser"
 )
 
 func main() {

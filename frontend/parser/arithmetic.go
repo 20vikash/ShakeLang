@@ -3,7 +3,7 @@ package parser
 import (
 	"fmt"
 	"reflect"
-	"shake/shake/lexer"
+	"shake/shake/frontend/lexer"
 	"unicode"
 )
 
