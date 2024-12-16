@@ -6,11 +6,11 @@ type Node interface {
 
 type Program struct {
 	_type string
-	body  []Node
+	Body  []Node
 }
 
 func createProgramNode(body []Node) Program {
-	return Program{_type: "Program", body: body}
+	return Program{_type: "Program", Body: body}
 }
 
 type Identifier struct {
@@ -31,16 +31,16 @@ type BinaryExpression struct {
 
 type VariableDeclaration struct {
 	_type string
-	id    Identifier
-	init  Node
+	Id    Identifier
+	Init  Node
 }
 
 func createVariableDeclarationNode(id Identifier, init Node) VariableDeclaration {
-	return VariableDeclaration{_type: "VariableDeclaration", id: id, init: init}
+	return VariableDeclaration{_type: "VariableDeclaration", Id: id, Init: init}
 }
 
 func createVariableDeclarationNodeWithoutInit(id Identifier) VariableDeclaration {
-	return VariableDeclaration{_type: "VariableDeclaration", id: id}
+	return VariableDeclaration{_type: "VariableDeclaration", Id: id}
 }
 
 type Literal struct {
@@ -54,21 +54,21 @@ func createLiteralNode(value string) Literal {
 
 type InitializationExpression struct {
 	_type string
-	id    Identifier
-	init  Node
+	Id    Identifier
+	Init  Node
 }
 
-type proclaimStatement struct {
+type ProclaimStatement struct {
 	_type string
-	arg   Node
+	Arg   Node
 }
 
-func createProclaimStatementNode(arg Node) proclaimStatement {
-	return proclaimStatement{_type: "ProclaimStatement", arg: arg}
+func createProclaimStatementNode(arg Node) ProclaimStatement {
+	return ProclaimStatement{_type: "ProclaimStatement", Arg: arg}
 }
 
 func createInitializationExpressionNode(id Identifier, init Node) InitializationExpression {
-	return InitializationExpression{_type: "InitializationExpression", id: id, init: init}
+	return InitializationExpression{_type: "InitializationExpression", Id: id, Init: init}
 }
 
 func (p Identifier) GetType() string { return p._type }
@@ -77,7 +77,7 @@ func (p BinaryExpression) GetType() string { return p._type }
 
 func (p InitializationExpression) GetType() string { return p._type }
 
-func (p proclaimStatement) GetType() string { return p._type }
+func (p ProclaimStatement) GetType() string { return p._type }
 
 func (p VariableDeclaration) GetType() string { return p._type }
 

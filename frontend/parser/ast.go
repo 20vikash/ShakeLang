@@ -1,11 +1,10 @@
 package parser
 
 import (
-	"fmt"
 	"shake/shake/frontend/lexer"
 )
 
-func Ast(tokens []lexer.Token) {
+func Ast(tokens []lexer.Token) Program {
 	nodes := make([]Node, 0)
 	count := 0
 	inStatement := false
@@ -114,7 +113,7 @@ func Ast(tokens []lexer.Token) {
 						initNode := createInitializationExpressionNode(id, literalNode)
 						nodes = append(nodes, initNode)
 					} else if tokens[i+2].Type_ == lexer.IDENTIFIER {
-						literalNode := createLiteralNode(tokens[i+2].Lexeme)
+						literalNode := createIdentifierNode(tokens[i+2].Lexeme)
 						initNode := createInitializationExpressionNode(id, literalNode)
 						nodes = append(nodes, initNode)
 					} else {
@@ -134,5 +133,7 @@ func Ast(tokens []lexer.Token) {
 	}
 
 	programNode := createProgramNode(nodes)
-	fmt.Println(programNode)
+
+	return programNode
+	// fmt.Println(programNode)
 }
