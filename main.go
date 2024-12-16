@@ -1,7 +1,8 @@
 package main
 
 import (
-	"os"
+	"fmt"
+	"shake/shake/backend"
 	"shake/shake/frontend/lexer"
 	"shake/shake/frontend/parser"
 )
@@ -20,10 +21,17 @@ func main() {
 	// 	os.Exit(1)
 	// }
 
-	d, err := os.ReadFile("some.thy")
+	// d, err := os.ReadFile("some.thy")
 
-	if err == nil {
-		tokens := lexer.Lexer(string(d))
-		parser.Ast(tokens)
-	}
+	// if err == nil {
+	// 	tokens := lexer.Lexer(string(d))
+	// 	parser.Ast(tokens)
+	// }
+
+	eq := "(1+10/3*(8+2)-1)"
+	tokens := lexer.Lexer(string(eq))
+	binex := parser.BinaryExpressionTree(tokens)
+	variables := make(map[string]string, 0)
+
+	fmt.Println(backend.EvaluateBinaryExpression(binex.Left, binex.Right, binex.Operator, variables))
 }

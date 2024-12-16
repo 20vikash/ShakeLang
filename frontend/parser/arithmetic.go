@@ -71,7 +71,7 @@ func postfix(infix string) string {
 	return postfix
 }
 
-func binaryExpressionTree(tokens []lexer.Token) BinaryExpression {
+func BinaryExpressionTree(tokens []lexer.Token) BinaryExpression {
 	infix := ""
 
 	for _, v := range tokens {
@@ -122,9 +122,9 @@ func getBinaryExpression(postfix string) BinaryExpression {
 			if rightType == "string" && leftType == "string" {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     getNodeTypeString(leftValue),
-					right:    getNodeTypeString(rightValue),
-					operator: chunk,
+					Left:     getNodeTypeString(leftValue),
+					Right:    getNodeTypeString(rightValue),
+					Operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -133,9 +133,9 @@ func getBinaryExpression(postfix string) BinaryExpression {
 			} else if rightType == "parser.BinaryExpression" && leftType == "string" {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     getNodeTypeString(leftValue),
-					right:    stack[len(stack)-1].(BinaryExpression),
-					operator: chunk,
+					Left:     getNodeTypeString(leftValue),
+					Right:    stack[len(stack)-1].(BinaryExpression),
+					Operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -144,9 +144,9 @@ func getBinaryExpression(postfix string) BinaryExpression {
 			} else if rightType == "string" && leftType == "parser.BinaryExpression" {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     stack[len(stack)-2].(BinaryExpression),
-					right:    getNodeTypeString(rightValue),
-					operator: chunk,
+					Left:     stack[len(stack)-2].(BinaryExpression),
+					Right:    getNodeTypeString(rightValue),
+					Operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]
@@ -155,9 +155,9 @@ func getBinaryExpression(postfix string) BinaryExpression {
 			} else {
 				bin := BinaryExpression{
 					_type:    "BinaryExpression",
-					left:     stack[len(stack)-2].(BinaryExpression),
-					right:    stack[len(stack)-1].(BinaryExpression),
-					operator: chunk,
+					Left:     stack[len(stack)-2].(BinaryExpression),
+					Right:    stack[len(stack)-1].(BinaryExpression),
+					Operator: chunk,
 				}
 
 				stack = stack[:len(stack)-2]

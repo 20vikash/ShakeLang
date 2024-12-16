@@ -1,7 +1,7 @@
 package parser
 
 type Node interface {
-	iHaveTo()
+	GetType() string
 }
 
 type Program struct {
@@ -15,18 +15,18 @@ func createProgramNode(body []Node) Program {
 
 type Identifier struct {
 	_type string
-	name  string
+	Name  string
 }
 
 func createIdentifierNode(name string) Identifier {
-	return Identifier{_type: "Identifier", name: name}
+	return Identifier{_type: "Identifier", Name: name}
 }
 
 type BinaryExpression struct {
 	_type    string
-	left     Node
-	operator string
-	right    Node
+	Left     Node
+	Operator string
+	Right    Node
 }
 
 type VariableDeclaration struct {
@@ -45,11 +45,11 @@ func createVariableDeclarationNodeWithoutInit(id Identifier) VariableDeclaration
 
 type Literal struct {
 	_type string
-	value string
+	Value string
 }
 
 func createLiteralNode(value string) Literal {
-	return Literal{_type: "Literal", value: value}
+	return Literal{_type: "Literal", Value: value}
 }
 
 type InitializationExpression struct {
@@ -71,16 +71,14 @@ func createInitializationExpressionNode(id Identifier, init Node) Initialization
 	return InitializationExpression{_type: "InitializationExpression", id: id, init: init}
 }
 
-func (p Program) iHaveTo() {}
+func (p Identifier) GetType() string { return p._type }
 
-func (p Identifier) iHaveTo() {}
+func (p BinaryExpression) GetType() string { return p._type }
 
-func (p BinaryExpression) iHaveTo() {}
+func (p InitializationExpression) GetType() string { return p._type }
 
-func (p InitializationExpression) iHaveTo() {}
+func (p proclaimStatement) GetType() string { return p._type }
 
-func (p proclaimStatement) iHaveTo() {}
+func (p VariableDeclaration) GetType() string { return p._type }
 
-func (p VariableDeclaration) iHaveTo() {}
-
-func (p Literal) iHaveTo() {}
+func (p Literal) GetType() string { return p._type }

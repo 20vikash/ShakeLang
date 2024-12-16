@@ -37,7 +37,7 @@ func Ast(tokens []lexer.Token) {
 						num++
 					}
 
-					node := binaryExpressionTree(temp)
+					node := BinaryExpressionTree(temp)
 					declareNode := createVariableDeclarationNode(id, node)
 					nodes = append(nodes, declareNode)
 				} else {
@@ -70,7 +70,7 @@ func Ast(tokens []lexer.Token) {
 						num++
 					}
 
-					node := binaryExpressionTree(temp)
+					node := BinaryExpressionTree(temp)
 					proclaimNode := createProclaimStatementNode(node)
 					nodes = append(nodes, proclaimNode)
 				} else {
@@ -105,7 +105,7 @@ func Ast(tokens []lexer.Token) {
 						num++
 					}
 
-					node := binaryExpressionTree(temp)
+					node := BinaryExpressionTree(temp)
 					initNode := createInitializationExpressionNode(id, node)
 					nodes = append(nodes, initNode)
 				} else {
