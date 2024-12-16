@@ -10,7 +10,7 @@ func getSoloValue(element parser.Node, variables map[string]string) int {
 		d, err := strconv.Atoi(element.(parser.Literal).Value)
 
 		if err != nil {
-			//TODO: Invalid type for arithmetic.
+			invalidBinaryExpressionValue()
 		}
 
 		return d
@@ -18,13 +18,13 @@ func getSoloValue(element parser.Node, variables map[string]string) int {
 		d, exists := variables[element.(parser.Identifier).Name]
 
 		if !exists {
-			//TODO: Variable doesn't exist.
+			variableNotDeclared()
 		}
 
 		d1, err := strconv.Atoi(d)
 
 		if err != nil {
-			//TODO: Invalid type for arithmetic.
+			invalidBinaryExpressionValue()
 		}
 
 		return d1

@@ -15,7 +15,7 @@ func Exec(ast []parser.Node) {
 			_, exists := variables[node.Id.Name]
 
 			if exists {
-				break //TODO: Variable already exists.
+				variableAlreadyExists()
 			}
 
 			if node.Init == nil {
@@ -25,7 +25,7 @@ func Exec(ast []parser.Node) {
 					d, exists := variables[node.Init.(parser.Identifier).Name]
 
 					if !exists {
-						break //TODO: No such variable.
+						variableNotDeclared()
 					}
 
 					variables[node.Id.Name] = d
@@ -43,14 +43,14 @@ func Exec(ast []parser.Node) {
 			_, exists := variables[node.Id.Name]
 
 			if !exists {
-				break //TODO: Didn't declare the variable.
+				variableNotDeclared()
 			}
 
 			if node.Init.GetType() == "Identifier" {
 				d, exists := variables[node.Init.(parser.Identifier).Name]
 
 				if !exists {
-					break //TODO: No such variable.
+					variableNotDeclared()
 				}
 
 				variables[node.Id.Name] = d
@@ -69,7 +69,7 @@ func Exec(ast []parser.Node) {
 				d, exists := variables[node.Arg.(parser.Identifier).Name]
 
 				if !exists {
-					break //TODO: Variable not declared.
+					variableNotDeclared()
 				}
 
 				fmt.Println(d)
